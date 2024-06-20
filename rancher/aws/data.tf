@@ -34,7 +34,7 @@ data "aws_ami" "windows" {
   owners      = ["801119661308"] #Amazon
   filter {
     name   = "name"
-    values = ["Windows_Server-2019-English-Full-ContainersLatest-*"]
+    values = ["Windows_Server-2019-*"]
   }
 
   filter {
