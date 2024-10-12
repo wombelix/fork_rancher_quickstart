@@ -24,6 +24,8 @@ provider "helm" {
   kubernetes {
     config_path = local_file.kube_config_server_yaml.filename
   }
+  repository_config_path = "${path.module}/.helm/repositories.yaml"
+  repository_cache       = "${path.module}/.helm"
 }
 
 # Rancher2 bootstrapping provider
