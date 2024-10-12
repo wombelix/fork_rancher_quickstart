@@ -1,17 +1,15 @@
 # Variables for AWS infrastructure module
 
-// TODO - use null defaults
-
-# Required
 variable "aws_access_key" {
   type        = string
   description = "AWS access key used to create infrastructure"
+  default     = ""
 }
 
-# Required
 variable "aws_secret_key" {
   type        = string
   description = "AWS secret key used to create AWS infrastructure"
+  default     = ""
 }
 
 variable "aws_session_token" {
@@ -29,7 +27,7 @@ variable "aws_region" {
 variable "aws_zone" {
   type        = string
   description = "AWS zone used for all resources"
-  default     = "us-east-1b"
+  default     = ""
 }
 
 variable "prefix" {
@@ -86,7 +84,6 @@ variable "rancher_server_admin_password" {
   description = "Admin password to use for Rancher server bootstrap, min. 12 characters"
 }
 
-# Required
 variable "add_windows_node" {
   type        = bool
   description = "Add a windows node to the workload cluster"
