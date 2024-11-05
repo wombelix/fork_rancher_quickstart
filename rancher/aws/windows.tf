@@ -7,7 +7,7 @@ resource "aws_instance" "quickstart_node_win" {
   instance_type = var.windows_instance_type
 
   key_name                    = aws_key_pair.quickstart_key_pair.key_name
-  vpc_security_group_ids      = [aws_security_group.rancher_sg_allowall.id]
+  vpc_security_group_ids      = [aws_security_group.rancher_security_group.id]
   subnet_id                   = aws_subnet.rancher_subnet.id
   associate_public_ip_address = true
   get_password_data           = true

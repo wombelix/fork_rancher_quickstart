@@ -93,6 +93,12 @@ variable "add_windows_node" {
   default     = false
 }
 
+variable "security_group_ingress_cidr" {
+  type        = string
+  description = "CIDR that is allowed to access the Rancher server and workload cluster, default: 0.0.0.0/0"
+  default     = "0.0.0.0/0"
+}
+
 # Local variables used to reduce repetition
 locals {
   node_username = "ec2-user"

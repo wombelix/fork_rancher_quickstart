@@ -43,3 +43,6 @@ windows_instance_type = "t3a.large"
 
 # Kubernetes version to use for managed workload cluster
 workload_kubernetes_version = "v1.24.14+rke2r1"
+
+# CIDR that is allowed to access the Rancher server and workload cluster, default: 0.0.0.0/0
+security_group_ingress_cidr = "0.0.0.0/0"
