@@ -139,6 +139,28 @@ resource "aws_instance" "rancher_server" {
   }
 }
 
+# Split-horizon DNS setup to make rancher reachable through private ip inside vpc
+resource "aws_route53_zone" "rancher_route53_private" {
+  name    = "sslip.io"
+  comment = "${var.prefix}-rancher-route53"
+
+  vpc {
+    vpc_id = aws_vpc.rancher_vpc.id
+  }
+
+  tags = {
+    Name    = "${var.prefix}-rancher-route53"
+    Creator = "rancher-quickstart"
+  }
+}
+resource "aws_route53_record" "rancher_sslip_private" {
+  zone_id = aws_route53_zone.rancher_route53_private.zone_id
+  name    = join(".", ["rancher", aws_instance.rancher_server.public_ip, "sslip.io"])
+  type    = "A"
+  ttl     = 300
+  records = [aws_instance.rancher_server.private_ip]
+}
+
 # Rancher resources
 module "rancher_common" {
   source = "../rancher-common"
@@ -164,7 +186,8 @@ module "rancher_common" {
 # AWS EC2 instance for creating a single node workload cluster
 resource "aws_instance" "quickstart_node" {
   depends_on = [
-    aws_route_table_association.rancher_route_table_association
+    aws_route_table_association.rancher_route_table_association,
+    aws_route53_record.rancher_sslip_private
   ]
   ami           = data.aws_ami.sles.id
   instance_type = var.instance_type
