@@ -92,6 +92,13 @@ resource "aws_security_group" "rancher_sg_allowall" {
   }
 }
 
+# EIP resource for Rancher Server
+resource "aws_eip" "rancher_server" {
+  domain   = "vpc"
+
+  depends_on = [aws_internet_gateway.rancher_gateway]
+}
+
 # AWS EC2 instance for creating a single node RKE cluster and installing the Rancher server
 resource "aws_instance" "rancher_server" {
   depends_on = [
@@ -130,11 +137,17 @@ resource "aws_instance" "rancher_server" {
   }
 }
 
+# EIP explicit allocation for Rancher Server
+resource "aws_eip_association" "rancher_server" {
+  instance_id   = aws_instance.rancher_server.id
+  allocation_id = aws_eip.rancher_server.id
+}
+
 # Rancher resources
 module "rancher_common" {
   source = "../rancher-common"
 
-  node_public_ip             = aws_instance.rancher_server.public_ip
+  node_public_ip             = aws_eip_association.rancher_server.public_ip
   node_internal_ip           = aws_instance.rancher_server.private_ip
   node_username              = local.node_username
   ssh_private_key_pem        = tls_private_key.global_key.private_key_pem
@@ -144,7 +157,7 @@ module "rancher_common" {
   rancher_version         = var.rancher_version
   rancher_helm_repository = var.rancher_helm_repository
 
-  rancher_server_dns = join(".", ["rancher", aws_instance.rancher_server.public_ip, "sslip.io"])
+  rancher_server_dns = join(".", ["rancher", aws_eip_association.rancher_server.public_ip, "sslip.io"])
 
   admin_password = var.rancher_server_admin_password
 

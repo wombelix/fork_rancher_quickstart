@@ -3,7 +3,7 @@ output "rancher_server_url" {
 }
 
 output "rancher_node_ip" {
-  value = aws_instance.rancher_server.public_ip
+  value = aws_eip.rancher_server.public_ip
 }
 
 output "workload_node_ip" {
