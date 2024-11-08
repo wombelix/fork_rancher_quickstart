@@ -3,14 +3,14 @@
 # AWS data
 # ----------------------------------------------------------
 
-# Use latest SLES 15 SP3
+# Use latest SLES 15 SP6 PAYG AMI
 data "aws_ami" "sles" {
   most_recent = true
   owners      = ["013907871322"] # SUSE
 
   filter {
     name   = "name"
-    values = ["suse-sles-15-sp3*"]
+    values = ["suse-sles-15-sp6-v*"]
   }
 
   filter {
