@@ -1,3 +1,21 @@
+# Fork / Backports
+
+The `backports` branch of this fork contains open pull requests from [upstream](https://github.com/rancher/quickstart) to fix bugs and add features.
+
+Feel free to use it until the pending PRs are merged and this branch becomes obsolete.
+
+Included Patches:
+- [fix(rancher-common): Helm error, could not download chart](https://github.com/rancher/quickstart/pull/238)
+- [feat(rancher/aws): Use AWS env vars, use null defaults](https://github.com/rancher/quickstart/pull/239)
+- [feat(rancher/aws): Bump rancher, rke2, k3s, cert-manager version](https://github.com/rancher/quickstart/pull/240)
+- [feat(rancher): Use latest SLES 15 SP6 PAYG AMI](https://github.com/rancher/quickstart/pull/241)
+- [feat(rancher): AWS - Switch Rancher Server public ip to EIP](https://github.com/rancher/quickstart/pull/243)
+- [fix(rancher): AWS - destroy helm_release.cert_manager timeout](https://github.com/rancher/quickstart/pull/245)
+- [feat(rancher): AWS - Variable to adjust security group ingress cidr](https://github.com/rancher/quickstart/pull/246)
+- [fix: windows ami does not exist](https://github.com/rancher/quickstart/pull/236) (with changes: [e38d45f](https://github.com/rancher/quickstart/commit/e38d45fa4201506551aa5289de731ff80ecbba90)]
+
+---
+
 # Quickstart examples for the Rancher by SUSE product portfolio
 
 Quickly stand up an HA-style installation of Rancher by SUSE products on your infrastructure provider of choice.
