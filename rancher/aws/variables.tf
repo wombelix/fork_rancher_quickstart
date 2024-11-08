@@ -51,25 +51,25 @@ variable "windows_instance_type" {
 variable "rancher_kubernetes_version" {
   type        = string
   description = "Kubernetes version to use for Rancher server cluster"
-  default     = "v1.24.14+k3s1"
+  default     = "v1.30.4+k3s1"
 }
 
 variable "workload_kubernetes_version" {
   type        = string
   description = "Kubernetes version to use for managed workload cluster"
-  default     = "v1.24.14+rke2r1"
+  default     = "v1.30.4+rke2r1"
 }
 
 variable "cert_manager_version" {
   type        = string
   description = "Version of cert-manager to install alongside Rancher (format: 0.0.0)"
-  default     = "1.11.0"
+  default     = "1.16.0"
 }
 
 variable "rancher_version" {
   type        = string
   description = "Rancher server version (format: v0.0.0)"
-  default     = "2.7.9"
+  default     = "2.9.2"
 }
 
 variable "rancher_helm_repository" {
