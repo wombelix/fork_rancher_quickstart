@@ -6,7 +6,7 @@ resource "helm_release" "cert_manager" {
   chart            = "https://charts.jetstack.io/charts/cert-manager-v${var.cert_manager_version}.tgz"
   namespace        = "cert-manager"
   create_namespace = true
-  wait             = true
+  wait             = false
 
   set {
     name  = "installCRDs"
