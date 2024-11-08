@@ -42,3 +42,6 @@ rancher_server_admin_password = ""
 #windows_instance_type = "t3a.large"
 
 #workload_kubernetes_version = "v1.30.4+rke2r1"
+
+# CIDR that is allowed to access the Rancher server and workload cluster, default: 0.0.0.0/0
+security_group_ingress_cidr = "0.0.0.0/0"

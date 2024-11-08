@@ -67,17 +67,21 @@ resource "aws_route_table_association" "rancher_route_table_association" {
   route_table_id = aws_route_table.rancher_route_table.id
 }
 
-# Security group to allow all traffic
-resource "aws_security_group" "rancher_sg_allowall" {
-  name        = "${var.prefix}-rancher-allowall"
-  description = "Rancher quickstart - allow all traffic"
+# Security group to allow ingress and egress traffic
+resource "aws_security_group" "rancher_security_group" {
+  # Adds unique suffix to the SG name, required by lifecycle policy
+  name_prefix = "${var.prefix}-rancher-security-group"
+  description = "Rancher quickstart - allow traffic from ${var.security_group_ingress_cidr}"
   vpc_id      = aws_vpc.rancher_vpc.id
 
   ingress {
     from_port   = "0"
     to_port     = "0"
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      var.security_group_ingress_cidr
+    ]
+    self        = true
   }
 
   egress {
@@ -89,6 +93,11 @@ resource "aws_security_group" "rancher_sg_allowall" {
 
   tags = {
     Creator = "rancher-quickstart"
+  }
+
+  # Allows changes on existing SG without dependency violation
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -108,7 +117,7 @@ resource "aws_instance" "rancher_server" {
   instance_type = var.instance_type
 
   key_name                    = aws_key_pair.quickstart_key_pair.key_name
-  vpc_security_group_ids      = [aws_security_group.rancher_sg_allowall.id]
+  vpc_security_group_ids      = [aws_security_group.rancher_security_group.id]
   subnet_id                   = aws_subnet.rancher_subnet.id
   associate_public_ip_address = true
 
@@ -143,6 +152,28 @@ resource "aws_eip_association" "rancher_server" {
   allocation_id = aws_eip.rancher_server.id
 }
 
+# Split-horizon DNS setup to make rancher reachable through private ip inside vpc
+resource "aws_route53_zone" "rancher_route53_private" {
+  name    = "sslip.io"
+  comment = "${var.prefix}-rancher-route53"
+
+  vpc {
+    vpc_id = aws_vpc.rancher_vpc.id
+  }
+
+  tags = {
+    Name    = "${var.prefix}-rancher-route53"
+    Creator = "rancher-quickstart"
+  }
+}
+resource "aws_route53_record" "rancher_sslip_private" {
+  zone_id = aws_route53_zone.rancher_route53_private.zone_id
+  name    = join(".", ["rancher", aws_instance.rancher_server.public_ip, "sslip.io"])
+  type    = "A"
+  ttl     = 300
+  records = [aws_instance.rancher_server.private_ip]
+}
+
 # Rancher resources
 module "rancher_common" {
   source = "../rancher-common"
@@ -168,13 +199,14 @@ module "rancher_common" {
 # AWS EC2 instance for creating a single node workload cluster
 resource "aws_instance" "quickstart_node" {
   depends_on = [
-    aws_route_table_association.rancher_route_table_association
+    aws_route_table_association.rancher_route_table_association,
+    aws_route53_record.rancher_sslip_private
   ]
   ami           = data.aws_ami.sles.id
   instance_type = var.instance_type
 
   key_name                    = aws_key_pair.quickstart_key_pair.key_name
-  vpc_security_group_ids      = [aws_security_group.rancher_sg_allowall.id]
+  vpc_security_group_ids      = [aws_security_group.rancher_security_group.id]
   subnet_id                   = aws_subnet.rancher_subnet.id
   associate_public_ip_address = true
 
