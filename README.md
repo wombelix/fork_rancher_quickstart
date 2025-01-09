@@ -4,6 +4,8 @@ The `backports` branch of this fork contains open pull requests from [upstream](
 
 Feel free to use it until the pending PRs are merged and this branch becomes obsolete.
 
+All code contributions authored by me are released under the [MIT-0](https://opensource.org/license/mit-0) license.
+
 Included Patches:
 - [fix(rancher-common): Helm error, could not download chart](https://github.com/rancher/quickstart/pull/238)
 - [feat(rancher/aws): Use AWS env vars, use null defaults](https://github.com/rancher/quickstart/pull/239)
