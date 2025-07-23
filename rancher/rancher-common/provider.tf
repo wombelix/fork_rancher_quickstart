@@ -2,7 +2,7 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "2.10.1"
+      version = "3.0.2"
     }
     local = {
       source  = "hashicorp/local"
@@ -10,7 +10,7 @@ terraform {
     }
     rancher2 = {
       source  = "rancher/rancher2"
-      version = "3.0.0"
+      version = "7.2.0"
     }
     ssh = {
       source  = "loafoe/ssh"
@@ -21,7 +21,7 @@ terraform {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path = local_file.kube_config_server_yaml.filename
   }
   repository_config_path = "${path.module}/.helm/repositories.yaml"

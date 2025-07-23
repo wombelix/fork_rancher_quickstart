@@ -79,9 +79,18 @@ resource "aws_security_group" "rancher_security_group" {
     to_port     = "0"
     protocol    = "-1"
     cidr_blocks = [
-      var.security_group_ingress_cidr
+      var.security_group_ingress_cidr,
+      aws_vpc.rancher_vpc.cidr_block
     ]
     self        = true
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTPS access for Rancher UI"
   }
 
   egress {

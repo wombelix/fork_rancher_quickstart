@@ -8,10 +8,12 @@ resource "helm_release" "cert_manager" {
   create_namespace = true
   wait             = false
 
-  set {
-    name  = "installCRDs"
-    value = "true"
-  }
+  set = [
+    {
+      name  = "installCRDs"
+      value = "true"
+    }
+  ]
 }
 
 # Install Rancher helm chart
@@ -26,18 +28,18 @@ resource "helm_release" "rancher_server" {
   create_namespace = true
   wait             = true
 
-  set {
-    name  = "hostname"
-    value = var.rancher_server_dns
-  }
-
-  set {
-    name  = "replicas"
-    value = "1"
-  }
-
-  set {
-    name  = "bootstrapPassword"
-    value = "admin" # TODO: change this once the terraform provider has been updated with the new pw bootstrap logic
-  }
+  set = [
+    {
+      name  = "hostname"
+      value = var.rancher_server_dns
+    },
+    {
+      name  = "replicas"
+      value = "1"
+    },
+    {
+      name  = "bootstrapPassword"
+      value = "admin" # TODO: change this once the terraform provider has been updated with the new pw bootstrap logic
+    }
+  ]
 }
